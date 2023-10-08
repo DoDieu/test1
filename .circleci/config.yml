@@ -405,7 +405,7 @@ workflows:
   send-notification:
     jobs:
       - notify:
-          context: Slack-secrets
+          context: Slack_secrets
 
 # workflows:
 #   default:
