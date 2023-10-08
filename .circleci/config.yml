@@ -380,6 +380,7 @@ jobs:
 #             then
 #               # your code here
 #             fi
+  
   notify:
     docker:
       - image: circleci/node:13.8.0
@@ -401,6 +402,8 @@ jobs:
               ]
             }
           event: always
+          channel: $SLACK_DEFAULT_CHANNEL
+          template: basic_success_1
 workflows:
   send-notification:
     jobs:
