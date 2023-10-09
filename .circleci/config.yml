@@ -387,22 +387,9 @@ jobs:
       - image: circleci/node:13.8.0
     steps:
       - slack/notify:
-          custom: |
-            {
-              "blocks": [
-                {
-                  "type": "section",
-                  "fields": [
-                    {
-                      "type": "plain_text",
-                      "text": "*This is a text notification*",
-                      "emoji": true
-                    }
-                  ]
-                }
-              ]
-            }
           event: always
+          channel: $SLACK_DEFAULT_CHANNEL
+          template: basic_fail_1
 workflows:
   send-notification:
     jobs:
