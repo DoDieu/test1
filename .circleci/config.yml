@@ -56,16 +56,6 @@ jobs:
           event: fail
           channel: $SLACK_DEFAULT_CHANNEL
           template: basic_fail_1
-      - slack/notify:
-          branch_pattern: .+
-          event: fail
-          channel: $SLACK_DEFAULT_CHANNEL
-          template: basic_fail_1
-      - slack/notify:
-          branch_pattern: .+
-          event: pass
-          channel: $SLACK_DEFAULT_CHANNEL
-          template: basic_success_1
 
 
   build-backend:
@@ -89,11 +79,6 @@ jobs:
           event: fail
           channel: $SLACK_DEFAULT_CHANNEL
           template: basic_fail_1
-      - slack/notify:
-          branch_pattern: .+
-          event: pass
-          channel: $SLACK_DEFAULT_CHANNEL
-          template: basic_success_1
 
 
   test-frontend:
@@ -118,11 +103,7 @@ jobs:
           event: fail
           channel: $SLACK_DEFAULT_CHANNEL
           template: basic_fail_1
-      - slack/notify:
-          branch_pattern: .+
-          event: pass
-          channel: $SLACK_DEFAULT_CHANNEL
-          template: basic_success_1
+     
 
                 
   test-backend:
@@ -147,12 +128,7 @@ jobs:
           event: fail
           channel: $SLACK_DEFAULT_CHANNEL
           template: basic_fail_1
-      - slack/notify:
-          branch_pattern: .+
-          event: pass
-          channel: $SLACK_DEFAULT_CHANNEL
-          template: basic_success_1
-            
+
   scan-frontend:
     docker:
       # Docker image here
@@ -178,12 +154,6 @@ jobs:
           event: fail
           channel: $SLACK_DEFAULT_CHANNEL
           template: basic_fail_1
-      - slack/notify:
-          branch_pattern: .+
-          event: pass
-          channel: $SLACK_DEFAULT_CHANNEL
-          template: basic_success_1
-
 
   scan-backend:
     docker:
@@ -209,11 +179,6 @@ jobs:
           event: fail
           channel: $SLACK_DEFAULT_CHANNEL
           template: basic_fail_1
-      - slack/notify:
-          branch_pattern: .+
-          event: pass
-          channel: $SLACK_DEFAULT_CHANNEL
-          template: basic_success_1
 
   # deploy-infrastructure:
   #   docker:
