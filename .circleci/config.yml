@@ -212,9 +212,11 @@ jobs:
       - run:
           name: Add back-end ip to ansible inventory
           command: |
-            BACKEND_PUBLIC_IP=$(aws ec2 describe-instances --filters "Name=tag:Name,Values=backend-${CIRCLE_WORKFLOW_ID:0:7}" --query 'Reservations[*].Instances[*].PublicDnsName' --output text)
-            echo $BACKEND_PUBLIC_IP >> .circleci/ansible/inventory.txt
-            cat .circleci/ansible/inventory.txt
+            aws ec2 describe-instances \
+            --query 'Reservations[*].Instances[*].PublicIpAddress' \
+            --filters "Name=tag:aws:cloudformation:stack-name,Values=udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}" \
+            --output text >> ~/project/.circleci/ansible/inventory.txt
+            cat ~/project/.circleci/ansible/inventory.txt
 
       - persist_to_workspace:
           root: ~/
@@ -237,7 +239,7 @@ jobs:
             - "be:58:0c:13:2e:3f:61:a3:3d:bd:df:c1:6c:df:ca:1e"
       # attach workspace
       - attach_workspace:
-          at: ~/
+          at: ~/workspace
 
       - run:
           name: Install dependencies
@@ -253,23 +255,13 @@ jobs:
       - run:
           name: Configure server
           command: |
-            cat ./.circleci/ansible/inventory.txt
-            export ANSIBLE_HOST_KEY_CHECKING=False
-            export RECORD_HOST_KEYS=False
-            export ANSIBLE_PARAMIKO_BANNER_TIMEOUT=30   
-            echo ENVIROMENT=production > "backend/.env"      
-            echo TYPEORM_CONNECTION=postgres >> "backend/.env"
-            echo TYPEORM_MIGRATIONS_DIR=./src/migrations >> "backend/.env"
-            echo TYPEORM_ENTITIES=./src/modules/domain/**/*.entity.ts >> "backend/.env"          
-            echo TYPEORM_PORT=$TYPEORM_PORT >> "backend/.env"      
-            echo TYPEORM_USERNAME=$TYPEORM_USERNAME >> "backend/.env"            
-            echo TYPEORM_PASSWORD=$TYPEORM_PASSWORD >> "backend/.env"      
-            echo TYPEORM_DATABASE=$TYPEORM_DATABASE >> "backend/.env"     
-            echo "CONTENT OF backend/.env"      
-            cat backend/.env         
-            cd .circleci/ansible
-            echo "ansible-playbook -i+ "+ cat inventory.txt + "configure-server.yml -v"
-            ansible-playbook -i inventory.txt configure-server.yml -v 
+            aws ec2 describe-instances \
+            --query 'Reservations[*].Instances[*].PublicIpAddress' \
+            --filters "Name=tag:aws:cloudformation:stack-name,Values=udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}" \
+            --output text >> ~/project/.circleci/ansible/inventory.txt
+            cat ~/project/.circleci/ansible/inventory.txt
+            ansible-playbook -i ~/project/.circleci/ansible/inventory.txt ~/project/.circleci/ansible/configure-server.yml
+          no_output_timeout: 30m
       - destroy-environment    
 
   # run-migrations:
